@@ -52,4 +52,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
     testImplementation("org.json:json:20231013")
+    implementation(libs.slf4j.api)
+    runtimeOnly(libs.logback.android)
 }
