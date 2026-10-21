@@ -55,4 +55,5 @@ dependencies {
     implementation(libs.slf4j.api)
     runtimeOnly(libs.logback.android)
     implementation(libs.androidx.compose.material.icons.core)
+
 }
