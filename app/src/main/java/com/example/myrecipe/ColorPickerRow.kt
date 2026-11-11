@@ -15,6 +15,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.window.Dialog
 
 
 @Composable
@@ -23,13 +29,18 @@ fun ColorPickerRow(
     onColorSelect: (Int) -> Unit
 
 ) {
+    var isDialogOpen by remember { mutableStateOf(false) }
+
+
     Row {
         val colors = listOf(
             Color.WHITE,
             Color.RED,
             Color.GREEN,
             Color.YELLOW
+
         )
+
         colors.forEach { color ->
 
             Box(
@@ -49,14 +60,44 @@ fun ColorPickerRow(
 
 
         }
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .background(ComposeColor(Color.GRAY))
+                .border(2.dp, ComposeColor(Color.BLACK))
+                .clickable {isDialogOpen = true /* открытие окна выбора*/ }
+
+
+        ) {
+            Icon(
+                imageVector = Icons.Default.Create,
+                contentDescription = null
+            )
+        }
+
+
+    }
+    if (isDialogOpen) {
+        Dialog(onDismissRequest = { isDialogOpen = false }) {
+            ColorPicker(
+                colorSelected = selectedColor,
+                onColorSelected = { newColor ->
+                    onColorSelect(newColor)
+                    isDialogOpen = false
+                }
+            )
+
+        }
+
     }
 }
-@Preview(showBackground = true)
-@Composable
-fun ColorPickerRowPreview(){
-    ColorPickerRow(
-        selectedColor = Color.RED,
-        onColorSelect = {}
-    )
 
-}
+    @Preview(showBackground = true)
+    @Composable
+    fun ColorPickerRowPreview() {
+        ColorPickerRow(
+            selectedColor = Color.RED,
+            onColorSelect = {}
+        )
+
+    }

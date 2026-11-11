@@ -46,6 +46,7 @@ fun RecipeEditScreen() {
         IsTriedCheckbox(isTried = isTried, onIsTriedChange = { isTried = it })
         ColorPickerRow(selectedColor = color, onColorSelect = { color = it })
         DifficultyPicker(selected = difficulty, onSelect = {difficulty = it})
+
     }
 
 }
