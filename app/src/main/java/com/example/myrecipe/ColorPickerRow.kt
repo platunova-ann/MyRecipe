@@ -18,31 +18,32 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.Dialog
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.foundation.combinedClickable
 
 
 @Composable
 fun ColorPickerRow(
     selectedColor: Int,
-    onColorSelect: (Int) -> Unit
+    onColorSelect: (Int) -> Unit,
 
 ) {
-    var isDialogOpen by remember { mutableStateOf(false) }
+    var isDialogOpen by rememberSaveable { mutableStateOf(false) }
 
-
+    val colors = listOf(
+        Color.WHITE,
+        Color.RED,
+        Color.GREEN,
+        Color.YELLOW
+    )
+//    val isStandard = colors.contains(selectedColor)
+//    val extraBoxColor = if (isStandard) Color.GRAY else selectedColor
+    var lastCustomColor by rememberSaveable { mutableStateOf<Int?>(null) }
+    val extraBoxColor = lastCustomColor ?: Color.GRAY
     Row {
-        val colors = listOf(
-            Color.WHITE,
-            Color.RED,
-            Color.GREEN,
-            Color.YELLOW
-
-        )
-
         colors.forEach { color ->
-
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -57,47 +58,45 @@ fun ColorPickerRow(
                     )
                 }
             }
-
-
         }
+
+        // Дополнительный квадратик — для кастомного цвета
         Box(
             modifier = Modifier
                 .size(48.dp)
-                .background(ComposeColor(Color.GRAY))
+                .background(ComposeColor(extraBoxColor))
                 .border(2.dp, ComposeColor(Color.BLACK))
-                .clickable {isDialogOpen = true /* открытие окна выбора*/ }
-
-
+                .combinedClickable(
+                    onClick = { lastCustomColor?.let { color ->
+                        onColorSelect(color)
+                    }},
+                    onLongClick = { isDialogOpen = true })
         ) {
             Icon(
                 imageVector = Icons.Default.Create,
                 contentDescription = null
             )
         }
-
-
     }
+
     if (isDialogOpen) {
         Dialog(onDismissRequest = { isDialogOpen = false }) {
             ColorPicker(
                 colorSelected = selectedColor,
                 onColorSelected = { newColor ->
-                    onColorSelect(newColor)
-                    isDialogOpen = false
-                }
+                    lastCustomColor = newColor
+                    onColorSelect(newColor) },
+                onDismiss = { isDialogOpen = false }
             )
-
         }
-
     }
 }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun ColorPickerRowPreview() {
-        ColorPickerRow(
-            selectedColor = Color.RED,
-            onColorSelect = {}
-        )
-
-    }
+@Preview(showBackground = true)
+@Composable
+fun ColorPickerRowPreview() {
+    ColorPickerRow(
+        selectedColor = Color.RED,
+        onColorSelect = {}
+    )
+}
