@@ -19,7 +19,7 @@ import androidx.compose.material.icons.filled.Create
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.window.Dialog
+//import androidx.compose.ui.window.Dialog
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.foundation.combinedClickable
 
@@ -28,9 +28,10 @@ import androidx.compose.foundation.combinedClickable
 fun ColorPickerRow(
     selectedColor: Int,
     onColorSelect: (Int) -> Unit,
+    onOpenColorPicker: () -> Unit,
+    lastCustomColor : Int? = null
 
 ) {
-    var isDialogOpen by rememberSaveable { mutableStateOf(false) }
 
     val colors = listOf(
         Color.WHITE,
@@ -38,9 +39,7 @@ fun ColorPickerRow(
         Color.GREEN,
         Color.YELLOW
     )
-//    val isStandard = colors.contains(selectedColor)
-//    val extraBoxColor = if (isStandard) Color.GRAY else selectedColor
-    var lastCustomColor by rememberSaveable { mutableStateOf<Int?>(null) }
+
     val extraBoxColor = lastCustomColor ?: Color.GRAY
     Row {
         colors.forEach { color ->
@@ -67,10 +66,13 @@ fun ColorPickerRow(
                 .background(ComposeColor(extraBoxColor))
                 .border(2.dp, ComposeColor(Color.BLACK))
                 .combinedClickable(
-                    onClick = { lastCustomColor?.let { color ->
-                        onColorSelect(color)
-                    }},
-                    onLongClick = { isDialogOpen = true })
+                    onClick = {
+                        lastCustomColor?.let { color ->
+                            onColorSelect(color)
+                        }
+                    },
+                    onLongClick = onOpenColorPicker
+                )
         ) {
             Icon(
                 imageVector = Icons.Default.Create,
@@ -79,17 +81,18 @@ fun ColorPickerRow(
         }
     }
 
-    if (isDialogOpen) {
-        Dialog(onDismissRequest = { isDialogOpen = false }) {
-            ColorPicker(
-                colorSelected = selectedColor,
-                onColorSelected = { newColor ->
-                    lastCustomColor = newColor
-                    onColorSelect(newColor) },
-                onDismiss = { isDialogOpen = false }
-            )
-        }
-    }
+//    if (isDialogOpen) {
+//        Dialog(onDismissRequest = { isDialogOpen = false }) {
+//            ColorPicker(
+//                colorSelected = selectedColor,
+//                onColorSelected = { newColor ->
+//                    lastCustomColor = newColor
+//                    onColorSelect(newColor)
+//                },
+//                onDismiss = { isDialogOpen = false }
+//            )
+//        }
+//    }
 }
 
 @Preview(showBackground = true)
@@ -97,6 +100,7 @@ fun ColorPickerRow(
 fun ColorPickerRowPreview() {
     ColorPickerRow(
         selectedColor = Color.RED,
-        onColorSelect = {}
+        onColorSelect = {},
+        onOpenColorPicker = {}
     )
 }

@@ -29,7 +29,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.layout.onSizeChanged
 import android.util.Log
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.drawscope.Stroke
+
 
 
 
@@ -41,7 +43,8 @@ fun ColorPicker(
 
 
 ) {
-    var pickedColor by remember { mutableStateOf(Color(colorSelected)) }
+    var pickedColorArgb by rememberSaveable { mutableStateOf(colorSelected) }
+    val pickedColor = Color(pickedColorArgb)
     Column {
 
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -57,7 +60,7 @@ fun ColorPicker(
 
         ColorPalette(
             onColorPicked = { newColor ->
-                pickedColor = Color(newColor)
+                pickedColorArgb = newColor
             },
             pickedColor = pickedColor
         )
@@ -65,6 +68,7 @@ fun ColorPicker(
         Button(onClick = {
             onColorSelected(pickedColor.toArgb())
             onDismiss()
+            onColorSelected(pickedColorArgb)
 
 
         }) {

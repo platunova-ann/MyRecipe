@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
 //        Thread.sleep(5000)
         setContent {
             MyRecipeTheme {
-                RecipeEditScreen()
+                RecipeApp()
 
             }
         }
