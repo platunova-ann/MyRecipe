@@ -66,7 +66,7 @@ fun ColorPicker(
         )
 
         Button(onClick = {
-            onColorSelected(pickedColor.toArgb())
+            onColorSelected(pickedColorArgb)
             onDismiss()
             onColorSelected(pickedColorArgb)
 
